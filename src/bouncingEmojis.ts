@@ -43,7 +43,7 @@ export const CELESTE_EMOJI_IMAGES: string[] = [
 // ── EDIT: Random links — clicking any emoji opens one ────
 export const EMOJI_LINKS: string[] = [
   "https://www.roblox.com/users/290467810/profile",
-  "https://discord.gg/n6zhPBnd26",
+  "https://discord.sylve.love",
   "https://www.youtube.com/@SylveLove",
   "https://tracker.gg/valorant/profile/riot/Hachi%23Love/overview?platform=pc&playlist=swiftplay&season=3ea2b318-423b-cf86-25da-7cbb0eefbe2d",
   "https://namemc.com/profile/luvsylve.1",
@@ -51,59 +51,288 @@ export const EMOJI_LINKS: string[] = [
   "",
 ];
 
-// ── EDIT: Sylve chat bubble messages ─────────────────────
+// ── PAGE STATE ──────────────────────────────────────────
+// Each page sets this before calling start().
+// The emoji system reads messages from the current state.
+// TODO: In the future this will be fetched from an actual API
+export type PageState = "home" | "references" | "lore" | "va-portfolio" | "gallery" | "credits" | "404";
+let currentPageState: PageState = "home";
+
+export function setPageState(state: PageState): void {
+  currentPageState = state;
+}
+
+export function getPageState(): PageState {
+  return currentPageState;
+}
+
+// ── EDIT: Per-page Sylve messages ────────────────────────
+//   Sylve: alien princess, magic user, royal race, artist, loves baking,
+//   loves Animal Jam & Overwatch, writes stories, cute housewife ✧
 //   Supports light markdown: **bold**, *italic*, ~~strike~~, `code`
-export const SYLVE_MESSAGES: string[] = [
-  "hewwo~!",
-  "*notices you*",
-  "*spike collar?*",
-  "✿ so pretty ✿",
-  "owo what's this?",
-  "**kawaii!!**",
-  "~nyaa~",
-  "✧ sparkle ✧",
-  "sorry~ sorry~ ...sorry~",
-  "hit your shots *next time* ✧",
-  "hi hi hi~",
-  "take me to your leader! ╰（‵□′）╯",
-];
+export const SYLVE_MESSAGES: Record<PageState, string[]> = {
+  home: [
+    "hewwo~!",
+    "*notices you*",
+    "✿ so pretty ✿",
+    "**kawaii!!**",
+    "✧ sparkle ✧",
+    "hi hi hi~",
+    "take me to your leader! ╰（‵□′）╯",
+    "I baked cookies!! want one? ✧",
+    "earth is so *pretty*~",
+    "don't tell the overlords we're here~",
+    "celeste!! stop eating all the **donuts**!!",
+    "I drew something for you~! ✧",
+    "hit your shots *next time* ✧",
+    "sorry~ sorry~ ...sorry~",
+    "my animal jam den is **so cute**~",
+    "*writing a new story~* ✧",
+    "*spike collar?*",
+  ],
+  references: [
+    "draw me!! ✧",
+    "do I look pretty? ✿",
+    "that's **me**!!",
+    "*twirls*",
+    "get my good side~",
+    "alien kawaii **princess**!",
+    "I drew this ref *myself*~ ✧",
+    "the *tiara* stays **on**!",
+    "I used my royal magic for this look ✧",
+  ],
+  lore: [
+    "it's a long story...",
+    "we came from *so far away*~ ✧",
+    "shhh it's a *secret*~",
+    "we ditched the overlords! **freedom!!**",
+    "earth has the best *baking supplies*~",
+    "I'm writing our story!! ✧",
+    "I'm a *royal* you know~ ✿",
+    "my magic is **sparkly** not scary!",
+    "celeste protects me~ I bake for her ✧",
+    "the overlords can't find us here~",
+  ],
+  "va-portfolio": [
+    "can you hear me? ✧",
+    "*clears throat*",
+    "**voice acting time!!**",
+    "~testing testing~ 1 2 3",
+    "I can do voices!",
+    "hire me!! ✧",
+    "*mic drop*",
+  ],
+  gallery: [
+    "I drew that one!! ✧",
+    "so many pictures!! ✿",
+    "that one's my **fav**!",
+    "ooh pretty~",
+    "*strikes a pose*",
+    "gallery tour! ✧",
+    "I paint with **magic** sometimes~",
+    "celeste looks so *cool* in that one!!",
+  ],
+  credits: [
+    "thank you everyone!! ✧",
+    "couldn't do it without you~",
+    "*bows*",
+    "you're all amazing!!",
+    "I baked a thank you cake!! ✧",
+    "celeste made this whole site for **me**~ ✿",
+  ],
+  "404": [
+    "how did we get here?",
+    "I'm **lost**!!",
+    "this isn't right...",
+    "where... am I? ✧",
+    "**confused alien noises**",
+    "take me home!!",
+    "I don't belong here~",
+    "did I use the wrong *magic spell*?",
+    "celeste!! **help**!!",
+  ],
+};
 
-// ── EDIT: Sylve messages when held / dragged ─────────────
-export const SYLVE_HELD_MESSAGES: string[] = [
-  "let me go!!",
-  "hey stop that!",
-  "*squeaks*",
-  "unhand me!!",
-  "**AAAA!!**",
-  "too tight!!",
-  "put me down~",
-  "nuuuuu!",
-];
+// ── EDIT: Per-page Sylve held messages ───────────────────
+export const SYLVE_HELD_MESSAGES: Record<PageState, string[]> = {
+  home: [
+    "let me go!!",
+    "hey stop that!",
+    "*squeaks*",
+    "unhand me!!",
+    "**AAAA!!**",
+    "too tight!!",
+    "put me down~",
+    "nuuuuu!",
+    "I'll burn your **cookies**!!",
+    "celeste will punch you!! ᕦ(ò_óˇ)ᕤ",
+    "I'm a **princess**!! unhand me!!",
+    "my overwatch rank!! I was in a *match*!!",
+  ],
+  references: [
+    "don't smudge the **art**!!",
+    "**careful** with me!",
+    "I'm a *reference*!!",
+    "hands off!! I just finished *drawing*~",
+    "you're ruining my *pose*!!",
+  ],
+  lore: [
+    "this isn't in my **backstory**!!",
+    "not *canon*!!",
+    "the overlords didn't even grab me like **this**!!",
+    "I'm writing you into the story as a *villain*!!",
+    "unscripted!! **unscripted!!**",
+  ],
+  "va-portfolio": [
+    "that's not in the **script**!!",
+    "*screams into mic*",
+    "CUT!! **CUT!!**",
+    "this isn't the audition!",
+  ],
+  gallery: [
+    "I'm not an **exhibit**!!",
+    "look don't *touch*!!",
+    "you'll smudge the **canvas**!!",
+    "my art!! be *careful*!!",
+  ],
+  credits: [
+    "I'm in the **credits**!!",
+    "don't drag the credits~",
+    "hey I was *bowing*!",
+    "celeste put me in the credits for a **reason**!!",
+  ],
+  "404": [
+    "I'm already **lost**!!",
+    "stop making it worse!!",
+    "put me back!! **please**!!",
+    "I just want to go *home* and bake~",
+    "my magic can't fix **this**!!",
+  ],
+};
 
-// ── EDIT: Celeste chat bubble messages ───────────────────
-export const CELESTE_MESSAGES: string[] = [
-  "taking over the **world**",
-  "celeste.red btw",
-  "I made this~",
-  "✧ *coding noises* ✧",
-  "**world domination**",
-  "hi from the *creator*!",
-  "i love sylve so much",
-  "i miss my *wife*~ ಥ_ಥ",
-  "give *her* the **world**! ᕦ(ò_óˇ)ᕤ",
-];
+// ── EDIT: Per-page Celeste messages ──────────────────────
+//   Celeste: alien warrior, physical combat, NOT cute, gamer,
+//   loves Minecraft, obsessed with boston kremes, loves wife,
+//   coded this website, world domination enthusiast
+export const CELESTE_MESSAGES: Record<PageState, string[]> = {
+  home: [
+    "celeste.red btw",
+    "I made this website~",
+    "✧ *coding noises* ✧",
+    "**world domination**",
+    "i love sylve so much",
+    "i miss my *wife*~ ಥ_ಥ",
+    "give *her* the **world**! ᕦ(ò_óˇ)ᕤ",
+    "anyone got **boston kremes**?",
+    "I'm NOT cute. I'm **intimidating**.",
+    "sylve's cookies are *the best*~",
+    "just got off a 12 hour *minecraft* session",
+    "I don't need magic. I have **fists**.",
+    "the overlords can *catch these hands*",
+    "sylve baked me a cake ಥ_ಥ **I love her**",
+  ],
+  references: [
+    "that's my **wife**!!",
+    "she's so pretty~ *not that I'm cute or anything*",
+    "celeste.red btw",
+    "I'm not *cute* I'm **strong**",
+    "she drew this herself!! ✧",
+    "sylve made me look *cool* in that one",
+  ],
+  lore: [
+    "we ditched the **overlords** together",
+    "I punch things. she does *magic*. we work.",
+    "earth has **boston kremes**. best planet.",
+    "the overlords can *catch these hands*",
+    "I'm not royal but I married **royalty**~",
+    "no magic? no problem. **fists**.",
+    "we chose *donuts* over world conquest",
+  ],
+  "va-portfolio": [
+    "she sounds **amazing** right?!",
+    "that's my *wife's* voice!!",
+    "celeste.red btw",
+    "I don't do voice acting. I do **punching**.",
+    "hire her!! ᕦ(ò_óˇ)ᕤ",
+  ],
+  gallery: [
+    "look at my **wife**!!",
+    "she drew all of these~",
+    "I coded the *gallery* btw",
+    "celeste.red btw",
+    "pixel **perfect** like my wife ✧",
+    "I'm not in enough of these. *unfair*.",
+  ],
+  credits: [
+    "that's **me**!! right there!!",
+    "I made **all** of this~",
+    "celeste.red **celeste.red**",
+    "you're welcome~",
+    "**world domination** starts with good code",
+    "sylve baked the *thank you treats*~",
+    "I coded this for my **wife** ✧",
+  ],
+  "404": [
+    "I didn't code this page... *wait*",
+    "**bug report** filed",
+    "this is *not* my fault~",
+    "✧ *debugging noises* ✧",
+    "404: wife **not found** ಥ_ಥ",
+    "who broke my **website**?!",
+    "I need a boston kreme to *calm down*",
+  ],
+};
 
-// ── EDIT: Celeste messages when held / dragged ───────────
-export const CELESTE_HELD_MESSAGES: string[] = [
-  "I made you!!",
-  "you can't hold the creator!",
-  "**bugs incoming**",
-  "ctrl+z ctrl+z!!",
-  "this wasn't in the code!",
-  "**YOU WILL REGRET THIS!**",
-  "watch where that hand is going **bud**",
-  "do you know **WHO** I am?",
-];
+// ── EDIT: Per-page Celeste held messages ─────────────────
+export const CELESTE_HELD_MESSAGES: Record<PageState, string[]> = {
+  home: [
+    "I don't need magic to **hurt you**",
+    "you can't hold a **warrior**!!",
+    "**bugs incoming** if you don't let go",
+    "ctrl+z ctrl+z!!",
+    "this wasn't in the code!",
+    "**YOU WILL REGRET THIS!**",
+    "watch where that hand is going **bud**",
+    "I will **end** you. *not cute btw*.",
+    "you're spilling my **boston kremes**!!",
+    "sylve!! *they're grabbing me*!!",
+  ],
+  references: [
+    "that's my wife's **art** you're near!!",
+    "hands off!! I'm **not** a reference!!",
+    "I'll ref sheet your *face*!!",
+  ],
+  lore: [
+    "this isn't **canon**!!",
+    "I punched overlords bigger than **you**!!",
+    "not in the *backstory*!!",
+    "I didn't leave my planet for **this**!!",
+  ],
+  "va-portfolio": [
+    "I don't do *voice acting* I do **violence**!!",
+    "this isn't in the script!!",
+    "let go or I'm calling **sylve**!!",
+  ],
+  gallery: [
+    "I'm not an **art piece**!!",
+    "don't touch the **coder**!!",
+    "I'll *pixel* your face!!",
+    "my wife worked hard on this **gallery**!!",
+  ],
+  credits: [
+    "I'm in the **credits**!! respect me!!",
+    "the coder demands **release**!!",
+    "you can't hold the **credits**!!",
+    "I made this site for my *wife* not for **this**!!",
+  ],
+  "404": [
+    "I'm trying to **fix** this!!",
+    "stop!! I need to *debug*!!",
+    "you're making the 404 **worse**!!",
+    "let me **code** in peace!!",
+    "I need a boston kreme and *silence*!!",
+  ],
+};
 
 // ── EDIT: Behaviour knobs ────────────────────────────────
 export const EMOJI_CONFIG = {
@@ -222,6 +451,11 @@ function parseMarkdown(text: string): string {
 }
 
 // ── Core class ───────────────────────────────────────────
+export interface EmojiBouncerOptions {
+  /** Force all spawned Sylve emojis to use this single image */
+  forceSrc?: string;
+}
+
 export class EmojiBouncerRenderer {
   private container: HTMLElement;
   private emojis: BouncingEmoji[] = [];
@@ -230,6 +464,7 @@ export class EmojiBouncerRenderer {
   private mouseY = -9999;
   private validSylveSrcs: string[] = [];
   private validCelesteSrcs: string[] = [];
+  private forceSrc?: string;
 
   // Drag state
   private dragTarget: BouncingEmoji | null = null;
@@ -239,12 +474,13 @@ export class EmojiBouncerRenderer {
   private dragStartY = 0;
   private dragTrail: { x: number; y: number; t: number }[] = [];
 
-  constructor(containerId: string) {
+  constructor(containerId: string, options?: EmojiBouncerOptions) {
     const el = document.getElementById(containerId);
     if (!el) {
       throw new Error(`Container "#${containerId}" not found.`);
     }
     this.container = el;
+    this.forceSrc = options?.forceSrc;
   }
 
   async start(): Promise<void> {
@@ -270,7 +506,7 @@ export class EmojiBouncerRenderer {
     });
 
     for (let i = 0; i < EMOJI_CONFIG.count; i++) {
-      this.spawnEmoji(pick(this.validSylveSrcs));
+      this.spawnEmoji(this.forceSrc || pick(this.validSylveSrcs));
     }
 
     this.running = true;
@@ -485,7 +721,7 @@ export class EmojiBouncerRenderer {
     old.el.remove();
     old.bubbleEl.remove();
     this.emojis.splice(index, 1);
-    this.spawnEmoji(pick(this.validSylveSrcs));
+    this.spawnEmoji(this.forceSrc || pick(this.validSylveSrcs));
   }
 
   private loop(): void {
@@ -520,7 +756,7 @@ export class EmojiBouncerRenderer {
         e.el.style.transform = `scale(${EMOJI_CONFIG.hoverScale})`;
 
         // ── Held chat bubble ────────────────────────────
-        const heldMsgs = e.emojiType === "celeste" ? CELESTE_HELD_MESSAGES : SYLVE_HELD_MESSAGES;
+        const heldMsgs = e.emojiType === "celeste" ? CELESTE_HELD_MESSAGES[currentPageState] : SYLVE_HELD_MESSAGES[currentPageState];
         if (!e.wasDragging && heldMsgs.length > 0) {
           e.bubbleEl.innerHTML = parseMarkdown(pick(heldMsgs));
           e.bubbleEl.style.opacity = "1";
@@ -687,7 +923,7 @@ export class EmojiBouncerRenderer {
         }
       } else {
         e.bubbleTimer -= dt;
-        const idleMsgs = e.emojiType === "celeste" ? CELESTE_MESSAGES : SYLVE_MESSAGES;
+        const idleMsgs = e.emojiType === "celeste" ? CELESTE_MESSAGES[currentPageState] : SYLVE_MESSAGES[currentPageState];
         if (e.bubbleTimer <= 0 && idleMsgs.length > 0) {
           e.bubbleEl.innerHTML = parseMarkdown(pick(idleMsgs));
           e.bubbleEl.style.opacity = "1";

@@ -7,7 +7,7 @@
  */
 
 import { PetalRenderer } from "./petals";
-import { EmojiBouncerRenderer } from "./bouncingEmojis";
+import { EmojiBouncerRenderer, setPageState, type PageState } from "./bouncingEmojis";
 
 // ── Boot ─────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,13 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const emojis = new EmojiBouncerRenderer("emoji-bouncer");
   emojis.start();
 
-  // Wire nav-btn active state toggling
+  // Wire nav-btn active state toggling + page state
+  const PAGE_STATE_MAP: Record<string, PageState> = {
+    "Home": "home",
+    "References": "references",
+    "Lore": "lore",
+    "VA Portfolio": "va-portfolio",
+    "Gallery": "gallery",
+    "Credits": "credits",
+  };
+
   const navBtns = document.querySelectorAll<HTMLAnchorElement>(".nav-btn");
   navBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       navBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
+      const state = PAGE_STATE_MAP[btn.textContent?.trim() || ""];
+      if (state) setPageState(state);
     });
   });
 
@@ -52,6 +63,47 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   }
+
+  // ── Social icon tooltips ─────────────────────────────────
+  const tooltip = document.createElement("div");
+  tooltip.className = "social-tooltip";
+  document.body.appendChild(tooltip);
+  let tooltipHideTimer = 0;
+
+  function showTooltip(anchor: Element, text: string) {
+    clearTimeout(tooltipHideTimer);
+    const rect = anchor.getBoundingClientRect();
+    tooltip.textContent = text;
+    tooltip.style.left = `${rect.left + rect.width / 2}px`;
+    tooltip.style.top = `${rect.top - 6}px`;
+    tooltip.classList.add("visible");
+  }
+
+  function hideTooltip() {
+    tooltip.classList.remove("visible");
+  }
+
+  // Discord: hover shows tag, click copies to clipboard
+  const discordBtn = document.querySelector<HTMLElement>('[data-social="discord"]');
+  if (discordBtn) {
+    const tag = discordBtn.dataset.tag || "@syluve";
+    discordBtn.addEventListener("mouseenter", () => showTooltip(discordBtn, tag));
+    discordBtn.addEventListener("mouseleave", () => hideTooltip());
+    discordBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      navigator.clipboard.writeText(tag).then(() => {
+        showTooltip(discordBtn, "Copied!");
+        tooltipHideTimer = window.setTimeout(() => hideTooltip(), 1500);
+      });
+    });
+  }
+
+  // Coming soon icons (TikTok, Instagram)
+  document.querySelectorAll<HTMLElement>('[data-social="coming-soon"]').forEach((btn) => {
+    btn.addEventListener("mouseenter", () => showTooltip(btn, "Coming soon!"));
+    btn.addEventListener("mouseleave", () => hideTooltip());
+    btn.addEventListener("click", (e) => e.preventDefault());
+  });
 
   // ── Credits: hovering Celeste name → spawns Celeste bouncing emojis ──
   const creditsName = document.getElementById("credits-name");

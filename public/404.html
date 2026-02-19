@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — sylve.love ✧</title>
+
+  <!-- Favicon (all devices) -->
+  <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="shortcut icon" href="favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+
+  <meta name="theme-color" content="#f2b8cf" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════ BACKGROUND VIDEO ═══════════ -->
+  <video class="bg-video" autoplay loop muted playsinline>
+    <source src="https://florakiiro.carrd.co/assets/videos/bg.mp4" type="video/mp4" />
+  </video>
+
+  <!-- ═══════════ BLUR OVERLAY ═══════════ -->
+  <div class="bg-blur"></div>
+
+  <!-- ═══════════ PETAL CANVAS ═══════════ -->
+  <canvas id="petal-canvas"></canvas>
+
+  <!-- ═══════════ 404 CARD ═══════════ -->
+  <main class="card card--404">
+    <h1 class="four04__title">404</h1>
+    <p class="four04__subtitle">how did we get here?</p>
+    <a href="https://sylve.love/" class="four04__btn">Go Home</a>
+  </main>
+
+  <!-- ═══════════ BOUNCING EMOJIS ═══════════ -->
+  <div id="emoji-bouncer"></div>
+
+  <!-- ═══════════ CREDITS FOOTER ═══════════ -->
+  <footer class="credits-footer">
+    made with love by
+    <a href="https://celeste.red/" target="_blank" rel="noopener" class="credits-name sparkle-hover" id="credits-name">Celeste</a>
+  </footer>
+
+  <div id="celeste-particles"></div>
+
+  <script src="404.bundle.js"></script>
+</body>
+</html>

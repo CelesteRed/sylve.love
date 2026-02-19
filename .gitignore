@@ -2,4 +2,6 @@ node_modules/
 dist/
 public/bundle.js
 public/bundle.js.map
+public/404.bundle.js
+public/404.bundle.js.map
 .claude/

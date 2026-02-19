@@ -4,9 +4,9 @@
   "private": true,
   "description": "Pastel alien kawaii card website with falling petals",
   "scripts": {
-    "dev": "esbuild src/main.ts --bundle --sourcemap --outfile=public/bundle.js --watch --servedir=public",
-    "build": "esbuild src/main.ts --bundle --minify --outfile=public/bundle.js",
-    "preview": "esbuild src/main.ts --bundle --sourcemap --outfile=public/bundle.js --servedir=public"
+    "dev": "esbuild src/main.ts src/404.ts --bundle --sourcemap --outdir=public --watch --servedir=public",
+    "build": "esbuild src/main.ts --bundle --minify --outfile=public/bundle.js && esbuild src/404.ts --bundle --minify --outfile=public/404.bundle.js",
+    "preview": "esbuild src/main.ts src/404.ts --bundle --sourcemap --outdir=public --servedir=public"
   },
   "devDependencies": {
     "esbuild": "^0.24.0",
