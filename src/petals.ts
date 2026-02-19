@@ -78,6 +78,11 @@ export class PetalRenderer {
   private running = false;
   private lastTime = 0;
 
+  // Adaptive performance
+  private frameTimes: number[] = [];
+  private fpsCheckTimer = 0;
+  private targetMaxPetals = CONFIG.maxPetals;
+
   constructor(canvasId: string) {
     const el = document.getElementById(canvasId);
     if (!el || !(el instanceof HTMLCanvasElement)) {
@@ -134,7 +139,7 @@ export class PetalRenderer {
   }
 
   private spawn(): void {
-    if (this.petals.length >= CONFIG.maxPetals) return;
+    if (this.petals.length >= this.targetMaxPetals) return;
 
     const size = rand(CONFIG.sizeMin, CONFIG.sizeMax);
     const petal: Petal = {
@@ -158,6 +163,27 @@ export class PetalRenderer {
 
     const delta = time - this.lastTime;
     this.lastTime = time;
+
+    // ── Adaptive FPS tracking ──────────────────────────
+    if (delta > 0 && delta < 500) {
+      this.frameTimes.push(delta);
+      if (this.frameTimes.length > 60) this.frameTimes.shift();
+
+      this.fpsCheckTimer += delta;
+      if (this.fpsCheckTimer >= 2000) {
+        this.fpsCheckTimer = 0;
+        const avgDelta = this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length;
+        const avgFps = 1000 / avgDelta;
+
+        if (avgFps < 20 && this.targetMaxPetals > 5) {
+          this.targetMaxPetals = Math.max(5, this.targetMaxPetals - 8);
+        } else if (avgFps < 30 && this.targetMaxPetals > 5) {
+          this.targetMaxPetals = Math.max(5, this.targetMaxPetals - 3);
+        } else if (avgFps > 45 && this.targetMaxPetals < CONFIG.maxPetals) {
+          this.targetMaxPetals = Math.min(CONFIG.maxPetals, this.targetMaxPetals + 2);
+        }
+      }
+    }
 
     // Spawn logic
     this.spawnTimer += delta;

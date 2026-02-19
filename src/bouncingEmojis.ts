@@ -48,6 +48,7 @@ export const EMOJI_LINKS: string[] = [
   "https://tracker.gg/valorant/profile/riot/Hachi%23Love/overview?platform=pc&playlist=swiftplay&season=3ea2b318-423b-cf86-25da-7cbb0eefbe2d",
   "https://namemc.com/profile/luvsylve.1",
   "https://www.youtube.com/watch?v=MZTlbDgpqW8",
+  "https://sylve.love/404.html",
   "",
 ];
 
@@ -474,6 +475,16 @@ export class EmojiBouncerRenderer {
   private dragStartY = 0;
   private dragTrail: { x: number; y: number; t: number }[] = [];
 
+  // Adaptive performance — FPS tracking
+  private frameTimes: number[] = [];
+  private lastFrameTime = 0;
+  private fpsCheckInterval = 2000; // check every 2s
+  private fpsCheckTimer = 0;
+  private targetCount = EMOJI_CONFIG.count; // current allowed count (may be lower than config)
+
+  // Touch device detection — disables proximity slowdown on mobile
+  private isTouchDevice = false;
+
   constructor(containerId: string, options?: EmojiBouncerOptions) {
     const el = document.getElementById(containerId);
     if (!el) {
@@ -502,6 +513,31 @@ export class EmojiBouncerRenderer {
       this.onDragEnd();
     });
     window.addEventListener("mouseup", () => {
+      this.onDragEnd();
+    });
+
+    // Touch support for mobile
+    window.addEventListener("touchstart", () => {
+      this.isTouchDevice = true;
+    }, { passive: true });
+    window.addEventListener("touchmove", (e) => {
+      const t = e.touches[0];
+      if (!t) return;
+      this.mouseX = t.clientX;
+      this.mouseY = t.clientY;
+      if (this.dragTarget) {
+        e.preventDefault();
+        this.onDragMoveXY(t.clientX, t.clientY);
+      }
+    }, { passive: false });
+    window.addEventListener("touchend", () => {
+      this.mouseX = -9999;
+      this.mouseY = -9999;
+      this.onDragEnd();
+    });
+    window.addEventListener("touchcancel", () => {
+      this.mouseX = -9999;
+      this.mouseY = -9999;
       this.onDragEnd();
     });
 
@@ -573,6 +609,9 @@ export class EmojiBouncerRenderer {
     img.addEventListener("mousedown", (e) => {
       this.onDragStart(e, emoji);
     });
+    img.addEventListener("touchstart", (e) => {
+      this.onTouchStart(e, emoji);
+    }, { passive: false });
 
     img.style.left = `${emoji.x}px`;
     img.style.top = `${emoji.y}px`;
@@ -585,24 +624,39 @@ export class EmojiBouncerRenderer {
 
   private onDragStart(e: MouseEvent, emoji: BouncingEmoji): void {
     e.preventDefault();
+    this.startDrag(e.clientX, e.clientY, emoji);
+  }
+
+  private onTouchStart(e: TouchEvent, emoji: BouncingEmoji): void {
+    const t = e.touches[0];
+    if (!t) return;
+    e.preventDefault();
+    this.startDrag(t.clientX, t.clientY, emoji);
+  }
+
+  private startDrag(cx: number, cy: number, emoji: BouncingEmoji): void {
     emoji.dragging = true;
     emoji.thrown = false;
     this.dragTarget = emoji;
-    this.dragOffsetX = e.clientX - emoji.x;
-    this.dragOffsetY = e.clientY - emoji.y;
-    this.dragStartX = e.clientX;
-    this.dragStartY = e.clientY;
-    this.dragTrail = [{ x: e.clientX, y: e.clientY, t: performance.now() }];
+    this.dragOffsetX = cx - emoji.x;
+    this.dragOffsetY = cy - emoji.y;
+    this.dragStartX = cx;
+    this.dragStartY = cy;
+    this.dragTrail = [{ x: cx, y: cy, t: performance.now() }];
   }
 
   private onDragMove(e: MouseEvent): void {
+    this.onDragMoveXY(e.clientX, e.clientY);
+  }
+
+  private onDragMoveXY(cx: number, cy: number): void {
     if (!this.dragTarget) return;
     const emoji = this.dragTarget;
-    emoji.x = e.clientX - this.dragOffsetX;
-    emoji.y = e.clientY - this.dragOffsetY;
+    emoji.x = cx - this.dragOffsetX;
+    emoji.y = cy - this.dragOffsetY;
 
     const now = performance.now();
-    this.dragTrail.push({ x: e.clientX, y: e.clientY, t: now });
+    this.dragTrail.push({ x: cx, y: cy, t: now });
     while (this.dragTrail.length > 1 && now - this.dragTrail[0].t > 80) {
       this.dragTrail.shift();
     }
@@ -708,6 +762,9 @@ export class EmojiBouncerRenderer {
     img.addEventListener("mousedown", (e) => {
       this.onDragStart(e, emoji);
     });
+    img.addEventListener("touchstart", (e) => {
+      this.onTouchStart(e, emoji);
+    }, { passive: false });
 
     img.style.left = `${emoji.x}px`;
     img.style.top = `${emoji.y}px`;
@@ -721,13 +778,43 @@ export class EmojiBouncerRenderer {
     old.el.remove();
     old.bubbleEl.remove();
     this.emojis.splice(index, 1);
-    this.spawnEmoji(this.forceSrc || pick(this.validSylveSrcs));
+    // Only respawn if we're below the adaptive target count
+    if (this.emojis.length < this.targetCount) {
+      this.spawnEmoji(this.forceSrc || pick(this.validSylveSrcs));
+    }
   }
 
   private loop(): void {
     if (!this.running) return;
 
     const now = performance.now();
+
+    // ── Adaptive FPS tracking ──────────────────────────
+    if (this.lastFrameTime > 0) {
+      const frameDelta = now - this.lastFrameTime;
+      this.frameTimes.push(frameDelta);
+      if (this.frameTimes.length > 60) this.frameTimes.shift();
+
+      this.fpsCheckTimer += frameDelta;
+      if (this.fpsCheckTimer >= this.fpsCheckInterval) {
+        this.fpsCheckTimer = 0;
+        const avgDelta = this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length;
+        const avgFps = 1000 / avgDelta;
+
+        if (avgFps < 20 && this.targetCount > 1) {
+          // Severe lag — drop aggressively
+          this.targetCount = Math.max(1, this.targetCount - 3);
+        } else if (avgFps < 30 && this.targetCount > 1) {
+          // Moderate lag — drop gently
+          this.targetCount = Math.max(1, this.targetCount - 1);
+        } else if (avgFps > 45 && this.targetCount < EMOJI_CONFIG.count) {
+          // Smooth — allow more emojis
+          this.targetCount = Math.min(EMOJI_CONFIG.count, this.targetCount + 1);
+        }
+      }
+    }
+    this.lastFrameTime = now;
+
     const w = window.innerWidth;
     const h = window.innerHeight;
     const size = EMOJI_CONFIG.size;
@@ -793,29 +880,38 @@ export class EmojiBouncerRenderer {
         }
       }
 
-      // ── Mouse proximity ─────────────────────────────
+      // ── Mouse proximity (disabled on touch devices) ─────
       const cx = e.x + size / 2;
       const cy = e.y + size / 2;
       const dx = cx - this.mouseX;
       const dy = cy - this.mouseY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      const outer = EMOJI_CONFIG.influenceRadius;
-      const inner = EMOJI_CONFIG.deadZoneRadius;
       let speed: number;
+      let isHovered: boolean;
 
-      if (e.thrown) {
+      if (this.isTouchDevice) {
+        // On touch devices, skip proximity slowdown entirely —
+        // there's no real cursor, so emojis would hit a phantom position
         speed = 1;
-      } else if (dist <= inner) {
-        speed = EMOJI_CONFIG.minSlowdown;
-      } else if (dist >= outer) {
-        speed = 1;
+        isHovered = false;
       } else {
-        const t = (dist - inner) / (outer - inner);
-        speed = EMOJI_CONFIG.minSlowdown + t * (1 - EMOJI_CONFIG.minSlowdown);
-      }
+        const outer = EMOJI_CONFIG.influenceRadius;
+        const inner = EMOJI_CONFIG.deadZoneRadius;
 
-      const isHovered = dist < outer;
+        if (e.thrown) {
+          speed = 1;
+        } else if (dist <= inner) {
+          speed = EMOJI_CONFIG.minSlowdown;
+        } else if (dist >= outer) {
+          speed = 1;
+        } else {
+          const t = (dist - inner) / (outer - inner);
+          speed = EMOJI_CONFIG.minSlowdown + t * (1 - EMOJI_CONFIG.minSlowdown);
+        }
+
+        isHovered = dist < outer;
+      }
 
       // ── Lifespan timer ────────────────────────────────
       const fadeOutStart = e.lifespan - fadeOutMs;

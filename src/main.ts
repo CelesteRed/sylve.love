@@ -68,6 +68,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ── Cursor sparkle trail (PC only) ─────────────────────────
+  const CURSOR_SPARKLES = ["✧", "⋆", "☆", "✦"];
+  let cursorIsTouchDevice = false;
+  let lastSparkleTime = 0;
+
+  window.addEventListener("touchstart", () => { cursorIsTouchDevice = true; }, { passive: true });
+
+  if (particleBox) {
+    document.addEventListener("mousemove", (ev) => {
+      if (cursorIsTouchDevice) return;
+      const now = Date.now();
+      if (now - lastSparkleTime < 50) return;
+      lastSparkleTime = now;
+
+      const span = document.createElement("span");
+      span.className = "cursor-sparkle";
+      span.textContent = CURSOR_SPARKLES[Math.floor(Math.random() * CURSOR_SPARKLES.length)];
+      span.style.left = `${ev.clientX + (Math.random() - 0.5) * 20}px`;
+      span.style.top = `${ev.clientY + (Math.random() - 0.5) * 20}px`;
+      span.style.setProperty("--drift", `${(Math.random() - 0.5) * 40}px`);
+      span.style.setProperty("--spin", `${(Math.random() - 0.5) * 120}deg`);
+      particleBox.appendChild(span);
+      setTimeout(() => span.remove(), 1200);
+    });
+  }
+
   // ── Social icon tooltips ─────────────────────────────────
   const tooltip = document.createElement("div");
   tooltip.className = "social-tooltip";

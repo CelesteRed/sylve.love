@@ -432,6 +432,27 @@ html, body {
   }
 }
 
+/* ── Cursor sparkle trail (PC only) ──────────────────── */
+.cursor-sparkle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 0.7rem;
+  opacity: 0.7;
+  animation: cursor-sparkle-float 1.2s ease-out forwards;
+  user-select: none;
+}
+
+@keyframes cursor-sparkle-float {
+  0% {
+    opacity: 0.7;
+    transform: translateY(0) translateX(0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-50px) translateX(var(--drift, 0px)) scale(0.2) rotate(var(--spin, 0deg));
+  }
+}
+
 /* ── 404 Page ────────────────────────────────────────── */
 .card--404 {
   flex-direction: column;
