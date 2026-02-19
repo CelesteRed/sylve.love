@@ -1,0 +1,15 @@
+{
+  "name": "sylve-card-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pastel alien kawaii card website with falling petals",
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --sourcemap --outfile=public/bundle.js --watch --servedir=public",
+    "build": "esbuild src/main.ts --bundle --minify --outfile=public/bundle.js",
+    "preview": "esbuild src/main.ts --bundle --sourcemap --outfile=public/bundle.js --servedir=public"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.0"
+  }
+}
