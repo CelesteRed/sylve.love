@@ -341,20 +341,35 @@ html, body {
   .card__nav {
     width: 100%;
     min-width: unset;
-    padding: 24px 20px 12px;
-    gap: 8px;
+    padding: 4px 16px 16px;
+    gap: 6px;
   }
 
   .card__profile {
-    padding: 12px 20px 28px;
+    order: -1;
+    padding: 16px 16px 8px;
   }
 
   .profile__avatar {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 8px;
   }
 
   .profile__name {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+  }
+
+  .profile__tagline {
+    margin-bottom: 4px;
+  }
+
+  .profile__divider {
+    margin: 6px 0;
+  }
+
+  .profile__cta {
+    margin-bottom: 4px;
   }
 }

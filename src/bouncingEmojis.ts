@@ -20,18 +20,24 @@
  * ═══════════════════════════════════════════════════════
  */
 
-// ── EDIT: Emoji image paths (relative to public/) ────────
-export const EMOJI_IMAGES: string[] = [
-  "assets/emojis/emoji1.png",
-  "assets/emojis/emoji2.png",
-  "assets/emojis/emoji3.png",
-  "assets/emojis/emoji4.png",
-  "assets/emojis/emoji5.png",
-  "assets/emojis/emoji6.png",
-  "assets/emojis/emoji7.png",
-  "assets/emojis/emoji8.png",
-  "assets/emojis/emoji9.png",
-  "assets/emojis/emoji10.png",
+// ── EDIT: Sylve emoji image paths (relative to public/) ───
+export const SYLVE_EMOJI_IMAGES: string[] = [
+  "assets/emojis/Semoji1.png",
+  "assets/emojis/Semoji2.png",
+  "assets/emojis/Semoji3.png",
+  "assets/emojis/Semoji4.png",
+  "assets/emojis/Semoji5.png",
+  "assets/emojis/Semoji6.png",
+  "assets/emojis/Semoji7.png",
+  "assets/emojis/Semoji8.png",
+  "assets/emojis/Semoji9.png",
+  "assets/emojis/Semoji10.png",
+];
+
+// ── EDIT: Celeste emoji image paths (relative to public/) ──
+export const CELESTE_EMOJI_IMAGES: string[] = [
+  "assets/emojis/Cemoji1.webp",
+  "assets/emojis/Cemoji2.webp",
 ];
 
 // ── EDIT: Random links — clicking any emoji opens one ────
@@ -50,12 +56,14 @@ export const EMOJI_LINKS: string[] = [
 export const SYLVE_MESSAGES: string[] = [
   "hewwo~!",
   "*notices you*",
+  "*spike collar?*",
   "✿ so pretty ✿",
   "owo what's this?",
   "**kawaii!!**",
   "~nyaa~",
   "✧ sparkle ✧",
   "sorry~ sorry~ ...sorry~",
+  "hit your shots *next time* ✧",
   "hi hi hi~",
   "take me to your leader! ╰（‵□′）╯",
 ];
@@ -74,12 +82,15 @@ export const SYLVE_HELD_MESSAGES: string[] = [
 
 // ── EDIT: Celeste chat bubble messages ───────────────────
 export const CELESTE_MESSAGES: string[] = [
-  "Taking over the world",
+  "taking over the **world**",
   "celeste.red btw",
   "I made this~",
   "✧ *coding noises* ✧",
   "**world domination**",
-  "hi from the creator!",
+  "hi from the *creator*!",
+  "i love sylve so much",
+  "i miss my *wife*~ ಥ_ಥ",
+  "give *her* the **world**! ᕦ(ò_óˇ)ᕤ",
 ];
 
 // ── EDIT: Celeste messages when held / dragged ───────────
@@ -89,6 +100,9 @@ export const CELESTE_HELD_MESSAGES: string[] = [
   "**bugs incoming**",
   "ctrl+z ctrl+z!!",
   "this wasn't in the code!",
+  "**YOU WILL REGRET THIS!**",
+  "watch where that hand is going **bud**",
+  "do you know **WHO** I am?",
 ];
 
 // ── EDIT: Behaviour knobs ────────────────────────────────
@@ -214,7 +228,8 @@ export class EmojiBouncerRenderer {
   private running = false;
   private mouseX = -9999;
   private mouseY = -9999;
-  private validSrcs: string[] = [];
+  private validSylveSrcs: string[] = [];
+  private validCelesteSrcs: string[] = [];
 
   // Drag state
   private dragTarget: BouncingEmoji | null = null;
@@ -233,9 +248,10 @@ export class EmojiBouncerRenderer {
   }
 
   async start(): Promise<void> {
-    this.validSrcs = await this.validateImages(EMOJI_IMAGES);
-    if (this.validSrcs.length === 0) {
-      console.warn("[emoji-bouncer] No emoji images loaded — skipping.");
+    this.validSylveSrcs = await this.validateImages(SYLVE_EMOJI_IMAGES);
+    this.validCelesteSrcs = await this.validateImages(CELESTE_EMOJI_IMAGES);
+    if (this.validSylveSrcs.length === 0) {
+      console.warn("[emoji-bouncer] No Sylve emoji images loaded — skipping.");
       return;
     }
 
@@ -254,7 +270,7 @@ export class EmojiBouncerRenderer {
     });
 
     for (let i = 0; i < EMOJI_CONFIG.count; i++) {
-      this.spawnEmoji(pick(this.validSrcs));
+      this.spawnEmoji(pick(this.validSylveSrcs));
     }
 
     this.running = true;
@@ -469,7 +485,7 @@ export class EmojiBouncerRenderer {
     old.el.remove();
     old.bubbleEl.remove();
     this.emojis.splice(index, 1);
-    this.spawnEmoji(pick(this.validSrcs));
+    this.spawnEmoji(pick(this.validSylveSrcs));
   }
 
   private loop(): void {
