@@ -58,65 +58,98 @@
       <a href="#" class="nav-btn">Credits</a>
     </nav>
 
-    <!-- -------- Right: Profile -------- -->
-    <section class="card__profile">
+    <!-- -------- Right: Page Content -------- -->
+    <section class="card__profile" data-active-page="home">
 
-      <!-- EDIT: Replace src with your own avatar image -->
-      <!-- EDIT: Replace src with your own avatar image -->
-      <img
-        class="profile__avatar"
-        src="assets/emojis/Semoji1.png"
-        alt="Sylve"
-      />
+      <!-- ══ HOME PAGE ══ -->
+      <div class="page" data-page="home">
+        <!-- EDIT: Replace src with your own avatar image -->
+        <img
+          class="profile__avatar"
+          src="assets/emojis/Semoji1.png"
+          alt="Sylve"
+        />
 
-      <!-- EDIT: Your display name -->
-      <h1 class="profile__name">Sylve</h1>
+        <!-- EDIT: Your display name -->
+        <h1 class="profile__name">Sylve</h1>
 
-      <!-- EDIT: Your tagline / subtitle -->
-      <p class="profile__tagline">Alien Kawaii Princess ☆</p>
+        <!-- EDIT: Your tagline / subtitle -->
+        <p class="profile__tagline">Alien Kawaii Princess ☆</p>
 
-      <hr class="profile__divider" />
+        <hr class="profile__divider" />
 
-      <!-- EDIT: Call-to-action text -->
-      <p class="profile__cta">Join the <a href="https://discord.sylve.love" target="_blank" rel="noopener" class="cta-link">Discord</a></p>
+        <!-- EDIT: Call-to-action text -->
+        <p class="profile__cta">Join the <a href="https://discord.sylve.love" target="_blank" rel="noopener" class="cta-link">Discord</a></p>
 
-      <!-- -------- Social Icons Row --------
-        Order: most used → coming soon (far right)
-      -->
-      <div class="profile__socials">
-        <!-- 1. Discord: hover shows tag, click copies -->
-        <a class="social-link" data-social="discord" data-tag="@syluve" title="Discord">
-          <img width="28" height="28" src="https://img.icons8.com/ios-filled/50/discord-logo.png" alt="Discord" />
-        </a>
-        <!-- 2. Valorant (Tracker.gg) -->
-        <a href="https://tracker.gg/valorant/profile/riot/Hachi%23Love/overview?platform=pc&playlist=swiftplay&season=3ea2b318-423b-cf86-25da-7cbb0eefbe2d" target="_blank" rel="noopener" class="social-link" title="Valorant">
-          <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/valorant.png" alt="Valorant" />
-        </a>
-        <!-- 3. Minecraft (NameMC) -->
-        <a href="https://namemc.com/profile/luvsylve.1" target="_blank" rel="noopener" class="social-link" title="Minecraft">
-          <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/minecraft-logo.png" alt="Minecraft" />
-        </a>
-        <!-- 4. Roblox -->
-        <a href="https://www.roblox.com/users/290467810/profile" target="_blank" rel="noopener" class="social-link" title="Roblox">
-          <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/roblox.png" alt="Roblox" />
-        </a>
-        <!-- 5. YouTube -->
-        <a href="https://www.youtube.com/@SylveLove" target="_blank" rel="noopener" class="social-link" title="YouTube">
-          <img width="28" height="28" src="https://img.icons8.com/ios-filled/50/youtube-play.png" alt="YouTube" />
-        </a>
-        <!-- 6. Twitch -->
-        <a href="https://www.twitch.tv/sylveluv" target="_blank" rel="noopener" class="social-link" title="Twitch">
-          <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/twitch.png" alt="Twitch" />
-        </a>
-        <!-- 7. TikTok (coming soon) -->
-        <a class="social-link" data-social="coming-soon" title="TikTok">
-          <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/tiktok--v1.png" alt="TikTok" />
-        </a>
-        <!-- 8. Instagram (coming soon) -->
-        <a class="social-link" data-social="coming-soon" title="Instagram">
-          <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/instagram-new--v1.png" alt="Instagram" />
-        </a>
+        <!-- -------- Social Icons Row --------
+          Order: most used → coming soon (far right)
+        -->
+        <div class="profile__socials">
+          <!-- 1. Discord: hover shows tag, click copies -->
+          <a class="social-link" data-social="discord" data-tag="@syluve" title="Discord">
+            <img width="28" height="28" src="https://img.icons8.com/ios-filled/50/discord-logo.png" alt="Discord" />
+          </a>
+          <!-- 2. Valorant (Tracker.gg) -->
+          <a href="https://tracker.gg/valorant/profile/riot/Hachi%23Love/overview?platform=pc&playlist=swiftplay&season=3ea2b318-423b-cf86-25da-7cbb0eefbe2d" target="_blank" rel="noopener" class="social-link" title="Valorant">
+            <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/valorant.png" alt="Valorant" />
+          </a>
+          <!-- 3. Minecraft (NameMC) -->
+          <a href="https://namemc.com/profile/luvsylve.1" target="_blank" rel="noopener" class="social-link" title="Minecraft">
+            <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/minecraft-logo.png" alt="Minecraft" />
+          </a>
+          <!-- 4. Roblox -->
+          <a href="https://www.roblox.com/users/290467810/profile" target="_blank" rel="noopener" class="social-link" title="Roblox">
+            <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/roblox.png" alt="Roblox" />
+          </a>
+          <!-- 5. YouTube -->
+          <a href="https://www.youtube.com/@SylveLove" target="_blank" rel="noopener" class="social-link" title="YouTube">
+            <img width="28" height="28" src="https://img.icons8.com/ios-filled/50/youtube-play.png" alt="YouTube" />
+          </a>
+          <!-- 6. Twitch -->
+          <a href="https://www.twitch.tv/sylveluv" target="_blank" rel="noopener" class="social-link" title="Twitch">
+            <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/twitch.png" alt="Twitch" />
+          </a>
+          <!-- 7. TikTok (coming soon) -->
+          <a class="social-link" data-social="coming-soon" title="TikTok">
+            <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/tiktok--v1.png" alt="TikTok" />
+          </a>
+          <!-- 8. Instagram (coming soon) -->
+          <a class="social-link" data-social="coming-soon" title="Instagram">
+            <img width="26" height="26" src="https://img.icons8.com/ios-filled/50/instagram-new--v1.png" alt="Instagram" />
+          </a>
+        </div>
       </div>
+
+      <!-- ══ REFERENCES PAGE ══ -->
+      <div class="page" data-page="references">
+        <h2 class="page__title">References</h2>
+        <p class="page__coming-soon">Coming Soon ✧</p>
+      </div>
+
+      <!-- ══ LORE PAGE ══ -->
+      <div class="page" data-page="lore">
+        <h2 class="page__title">Lore</h2>
+        <p class="page__coming-soon">Coming Soon ✧</p>
+      </div>
+
+      <!-- ══ VA PORTFOLIO PAGE ══ -->
+      <div class="page" data-page="va-portfolio">
+        <h2 class="page__title">VA Portfolio</h2>
+        <p class="page__coming-soon">Coming Soon ✧</p>
+      </div>
+
+      <!-- ══ GALLERY PAGE ══ -->
+      <div class="page" data-page="gallery">
+        <h2 class="page__title">Gallery</h2>
+        <p class="page__coming-soon">Coming Soon ✧</p>
+      </div>
+
+      <!-- ══ CREDITS PAGE ══ -->
+      <div class="page" data-page="credits">
+        <h2 class="page__title">Credits</h2>
+        <p class="page__coming-soon">Coming Soon ✧</p>
+      </div>
+
     </section>
   </main>
 

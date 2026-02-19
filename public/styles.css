@@ -38,7 +38,7 @@ html, body {
   Z-INDEX LAYER ORDER:
     1  bg-video           — the mp4 background
     2  bg-blur            — frosted blur overlay
-    3  petal-canvas       — falling petals (above blur!)
+    3  petal-canvas       — falling UFOs (above blur!)
     5  card / footer      — the main content card + credits
     6  celeste-particles  — hover sparkles from credits name
    10  emoji-bouncer      — bouncing emojis (in front of everything)
@@ -55,7 +55,7 @@ html, body {
   z-index: 1;
 }
 
-/* ── Blur overlay (sits between video and petals) ─────── */
+/* ── Blur overlay (sits between video and UFOs) ─────── */
 .bg-blur {
   position: fixed;
   inset: 0;
@@ -69,7 +69,7 @@ html, body {
   pointer-events: none;
 }
 
-/* ── Petal canvas (above blur, below card) ────────────── */
+/* ── UFO / Petal canvas (above blur, below card) ─────── */
 #petal-canvas {
   position: fixed;
   inset: 0;
@@ -206,8 +206,48 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 36px 32px;
+  padding: 0;
   text-align: center;
+  position: relative;
+}
+
+/* ── Page switching (show/hide with crossfade) ────────── */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  padding: 36px 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.card__profile[data-active-page="home"] .page[data-page="home"],
+.card__profile[data-active-page="references"] .page[data-page="references"],
+.card__profile[data-active-page="lore"] .page[data-page="lore"],
+.card__profile[data-active-page="va-portfolio"] .page[data-page="va-portfolio"],
+.card__profile[data-active-page="gallery"] .page[data-page="gallery"],
+.card__profile[data-active-page="credits"] .page[data-page="credits"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Placeholder page styles ─────────────────────────── */
+.page__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--pink-dark);
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
+}
+
+.page__coming-soon {
+  font-size: 1rem;
+  color: var(--text-light);
+  letter-spacing: 0.02em;
 }
 
 .profile__avatar {
@@ -457,7 +497,23 @@ html, body {
 
   .card__profile {
     order: -1;
+    padding: 0;
+  }
+
+  .page {
+    position: relative;
+    inset: auto;
     padding: 16px 16px 8px;
+    display: none;
+  }
+
+  .card__profile[data-active-page="home"] .page[data-page="home"],
+  .card__profile[data-active-page="references"] .page[data-page="references"],
+  .card__profile[data-active-page="lore"] .page[data-page="lore"],
+  .card__profile[data-active-page="va-portfolio"] .page[data-page="va-portfolio"],
+  .card__profile[data-active-page="gallery"] .page[data-page="gallery"],
+  .card__profile[data-active-page="credits"] .page[data-page="credits"] {
+    display: flex;
   }
 
   .profile__avatar {

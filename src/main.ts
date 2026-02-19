@@ -30,13 +30,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const navBtns = document.querySelectorAll<HTMLAnchorElement>(".nav-btn");
+  const contentEl = document.querySelector<HTMLElement>(".card__profile");
   navBtns.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       navBtns.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       const state = PAGE_STATE_MAP[btn.textContent?.trim() || ""];
-      if (state) setPageState(state);
+      if (state) {
+        setPageState(state);
+        if (contentEl) contentEl.dataset.activePage = state;
+      }
     });
   });
 

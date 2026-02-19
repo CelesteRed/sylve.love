@@ -16,12 +16,8 @@
 // Add as many as you like — each falling petal randomly
 // picks one from this list.
 export const PETAL_IMAGES: string[] = [
-  "assets/petals/petal1.png",
-  "assets/petals/petal2.png",
-  "assets/petals/petal3.png",
-  // "assets/petals/petal4.png",
-  // "assets/petals/heart.png",
-  // "assets/petals/star.png",
+  "assets/images/ufo1.png",
+  "assets/images/ufo2.png",
 ];
 
 // ── EDIT: Behaviour knobs ────────────────────────────────
