@@ -45,9 +45,9 @@ export const EMOJI_LINKS: string[] = [
   "",
 ];
 
-// ── EDIT: Chat bubble messages ───────────────────────────
+// ── EDIT: Sylve chat bubble messages ─────────────────────
 //   Supports light markdown: **bold**, *italic*, ~~strike~~, `code`
-export const EMOJI_MESSAGES: string[] = [
+export const SYLVE_MESSAGES: string[] = [
   "hewwo~!",
   "*notices you*",
   "✿ so pretty ✿",
@@ -60,8 +60,8 @@ export const EMOJI_MESSAGES: string[] = [
   "take me to your leader! ╰（‵□′）╯",
 ];
 
-// ── EDIT: Messages when an emoji is being held / dragged ──
-export const EMOJI_HELD_MESSAGES: string[] = [
+// ── EDIT: Sylve messages when held / dragged ─────────────
+export const SYLVE_HELD_MESSAGES: string[] = [
   "let me go!!",
   "hey stop that!",
   "*squeaks*",
@@ -70,6 +70,25 @@ export const EMOJI_HELD_MESSAGES: string[] = [
   "too tight!!",
   "put me down~",
   "nuuuuu!",
+];
+
+// ── EDIT: Celeste chat bubble messages ───────────────────
+export const CELESTE_MESSAGES: string[] = [
+  "Taking over the world",
+  "celeste.red btw",
+  "I made this~",
+  "✧ *coding noises* ✧",
+  "**world domination**",
+  "hi from the creator!",
+];
+
+// ── EDIT: Celeste messages when held / dragged ───────────
+export const CELESTE_HELD_MESSAGES: string[] = [
+  "I made you!!",
+  "you can't hold the creator!",
+  "**bugs incoming**",
+  "ctrl+z ctrl+z!!",
+  "this wasn't in the code!",
 ];
 
 // ── EDIT: Behaviour knobs ────────────────────────────────
@@ -149,6 +168,7 @@ interface BouncingEmoji {
   wiggleClock: number;
   squishClock: number;
   link: string;
+  emojiType: "sylve" | "celeste";
   dragging: boolean;
   thrown: boolean;
   // Chat bubble state
@@ -243,6 +263,70 @@ export class EmojiBouncerRenderer {
 
   stop(): void {
     this.running = false;
+  }
+
+  /** Spawn an emoji with a specific image, position, and link.
+   *  Use this to create emojis from outside (e.g. hover effects). */
+  spawnSpecific(
+    src: string, x: number, y: number,
+    link: string, type: "sylve" | "celeste" = "sylve",
+    message?: string,
+  ): void {
+    const size = EMOJI_CONFIG.size;
+    const img = document.createElement("img");
+    img.src = src;
+    img.width = size;
+    img.height = size;
+    img.style.opacity = "0";
+    img.draggable = false;
+
+    const now = performance.now();
+
+    const bubbleEl = document.createElement("div");
+    bubbleEl.className = "emoji-bubble";
+    bubbleEl.style.opacity = "0";
+
+    const emoji: BouncingEmoji = {
+      el: img,
+      bubbleEl,
+      link,
+      emojiType: type,
+      x: x - size / 2,
+      y: y - size / 2,
+      vx: randSpeed(),
+      vy: randSpeed(),
+      livedTime: 0,
+      lifespan: rand(EMOJI_CONFIG.lifespanMin, EMOJI_CONFIG.lifespanMax) * 1000,
+      lastTick: now,
+      wigglePhase: rand(0, Math.PI * 2),
+      wiggleClock: 0,
+      squishClock: rand(0, Math.PI * 2),
+      dragging: false,
+      thrown: false,
+      bubbleTimer: rand(EMOJI_CONFIG.bubbleIntervalMin, EMOJI_CONFIG.bubbleIntervalMax) * 1000,
+      bubbleShowTime: 0,
+      bubbleDuration: 0,
+      bubbleActive: false,
+      wasDragging: false,
+    };
+
+    if (message) {
+      emoji.bubbleEl.innerHTML = parseMarkdown(message);
+      emoji.bubbleEl.style.opacity = "1";
+      emoji.bubbleActive = true;
+      emoji.bubbleShowTime = 0;
+      emoji.bubbleDuration = rand(EMOJI_CONFIG.bubbleDurationMin, EMOJI_CONFIG.bubbleDurationMax) * 1000;
+    }
+
+    img.addEventListener("mousedown", (e) => {
+      this.onDragStart(e, emoji);
+    });
+
+    img.style.left = `${emoji.x}px`;
+    img.style.top = `${emoji.y}px`;
+    this.container.appendChild(img);
+    this.container.appendChild(bubbleEl);
+    this.emojis.push(emoji);
   }
 
   // ── Drag handlers ─────────────────────────────────────
@@ -349,6 +433,7 @@ export class EmojiBouncerRenderer {
       el: img,
       bubbleEl,
       link: EMOJI_LINKS.length > 0 ? pick(EMOJI_LINKS) : "",
+      emojiType: "sylve",
       x: rand(0, Math.max(maxX, 1)),
       y: rand(0, Math.max(maxY, 1)),
       vx: randSpeed(),
@@ -419,16 +504,17 @@ export class EmojiBouncerRenderer {
         e.el.style.transform = `scale(${EMOJI_CONFIG.hoverScale})`;
 
         // ── Held chat bubble ────────────────────────────
-        if (!e.wasDragging && EMOJI_HELD_MESSAGES.length > 0) {
-          e.bubbleEl.innerHTML = parseMarkdown(pick(EMOJI_HELD_MESSAGES));
+        const heldMsgs = e.emojiType === "celeste" ? CELESTE_HELD_MESSAGES : SYLVE_HELD_MESSAGES;
+        if (!e.wasDragging && heldMsgs.length > 0) {
+          e.bubbleEl.innerHTML = parseMarkdown(pick(heldMsgs));
           e.bubbleEl.style.opacity = "1";
           e.bubbleActive = true;
           e.bubbleShowTime = 0;
           e.bubbleDuration = rand(EMOJI_CONFIG.bubbleDurationMin, EMOJI_CONFIG.bubbleDurationMax) * 1000;
         } else if (e.bubbleActive) {
           e.bubbleShowTime += dt;
-          if (e.bubbleShowTime >= e.bubbleDuration && EMOJI_HELD_MESSAGES.length > 0) {
-            e.bubbleEl.innerHTML = parseMarkdown(pick(EMOJI_HELD_MESSAGES));
+          if (e.bubbleShowTime >= e.bubbleDuration && heldMsgs.length > 0) {
+            e.bubbleEl.innerHTML = parseMarkdown(pick(heldMsgs));
             e.bubbleShowTime = 0;
             e.bubbleDuration = rand(EMOJI_CONFIG.bubbleDurationMin, EMOJI_CONFIG.bubbleDurationMax) * 1000;
           }
@@ -585,8 +671,9 @@ export class EmojiBouncerRenderer {
         }
       } else {
         e.bubbleTimer -= dt;
-        if (e.bubbleTimer <= 0 && EMOJI_MESSAGES.length > 0) {
-          e.bubbleEl.innerHTML = parseMarkdown(pick(EMOJI_MESSAGES));
+        const idleMsgs = e.emojiType === "celeste" ? CELESTE_MESSAGES : SYLVE_MESSAGES;
+        if (e.bubbleTimer <= 0 && idleMsgs.length > 0) {
+          e.bubbleEl.innerHTML = parseMarkdown(pick(idleMsgs));
           e.bubbleEl.style.opacity = "1";
           e.bubbleActive = true;
           e.bubbleShowTime = 0;
